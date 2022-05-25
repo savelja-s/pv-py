@@ -12,7 +12,7 @@ RUN mkdir -p $APP_HOME
 RUN pip install --upgrade pip
 COPY requirements.txt $APP_HOME/
 RUN pip install --no-cache-dir --trusted-host pypy.org --trusted-host files.pythonhosted.org -r $APP_HOME/requirements.txt
-RUN groupadd --gid $USER_GID $USERNAME && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
+#RUN groupadd --gid $USER_GID $USERNAME && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
 RUN chown -R $USERNAME $APP_HOME/
 USER $USERNAME
 RUN echo "APP_HOME=$APP_HOME"
