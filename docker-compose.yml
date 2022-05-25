@@ -11,8 +11,6 @@ services:
         USERNAME: $USER
     volumes:
       - .:/app
-    depends_on:
-      - postgresql
     networks:
       - db_network
       - web_network
