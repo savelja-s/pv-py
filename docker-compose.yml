@@ -5,18 +5,6 @@ services:
       - "85:8000"
     restart: always
     command: [ bash, entrypoint.sh ]
-    build:
-      context: .
-      args:
-        USERNAME: $USER
+    build: .
     volumes:
       - .:/app
-    networks:
-      - db_network
-      - web_network
-networks:
-  db_network:
-    driver: bridge
-  web_network:
-    driver: bridge
- 
