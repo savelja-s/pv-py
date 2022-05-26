@@ -27,7 +27,7 @@ server_ip = config('SERVER_ID', default='0.0.0.0')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 ALLOWED_HOSTS = (
-    '*'
+    '*',
 )
 CORS_ALLOWED_ORIGINS = [
     f'http://{server_ip}:85',
