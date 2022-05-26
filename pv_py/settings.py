@@ -131,13 +131,30 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
+# def add_my_custom_attribute(record):
+#     record.body = record.request.body.read()
+#     return True
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+        # 'add_my_custom_attribute': {
+        #     '()': 'django.utils.log.CallbackFilter',
+        #     'callback': add_my_custom_attribute,
+        # }
+    },
     'formatters': {
         'verbose': {
             'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
@@ -147,21 +164,34 @@ LOGGING = {
             'format': '{levelname} {asctime} {module} {message}',
             'style': '{',
         },
+        'django.request': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] {message} headers:{request.headers}',
+            'style': '{',
+        }
     },
     'handlers': {
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+            # 'formatter': 'simple',
+            'filters': ['require_debug_true'],
         },
         'mail_admins': {
             'level': 'ERROR',
+            'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler',
         },
         'file': {
             'class': 'logging.FileHandler',
             'filename': os.path.join(CORE_DIR, 'var/logs/general.log'),
             'formatter': 'simple',
+        },
+        'django.request': {
+            # 'filters': ['add_my_custom_attribute'],
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(CORE_DIR, 'var/logs/request.log'),
+            'formatter': 'django.request',
         },
     },
     'loggers': {
@@ -170,8 +200,7 @@ LOGGING = {
             'propagate': True,
         },
         'django.request': {
-            'handlers': ['mail_admins', 'file'],
-            'level': 'ERROR',
+            'handlers': ['mail_admins', 'file', 'django.request'],
             'propagate': False,
         },
     }
