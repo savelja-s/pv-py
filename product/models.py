@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.fields.files import FieldFile
-from django.template.defaultfilters import slugify
+from django.utils.text import slugify
 
 STATUS_ACTIVE = 'active'
 STATUS_DEACTIVE = 'deactive'
@@ -31,7 +31,7 @@ class Product(models.Model):
 
 class ProductVersion(models.Model):
     def upload_file(self, filename):
-        return f'var/files/{slugify(self.product.name)}/{slugify(self.name)}'
+        return f'var/files/{slugify(self.product.name, allow_unicode=True)}/{slugify(self.name, allow_unicode=True)}'
 
     name: str = models.CharField(max_length=30, unique=True)
     product = models.ForeignKey(

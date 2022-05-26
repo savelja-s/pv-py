@@ -31,4 +31,4 @@ class ViewProductVersionFile(APIView):
             version = ProductVersion.objects.filter(product__id=product_id).get(pk=version_id)
         except ProductVersion.DoesNotExist:
             raise Http404
-        return Response(version.file.read())
+        return Response(version.file)
