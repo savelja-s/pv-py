@@ -1,3 +1,4 @@
+from decouple import config
 from django.contrib.auth import get_user_model
 from django.urls import path, include, re_path
 from drf_yasg import openapi
@@ -17,6 +18,7 @@ schema_view = get_schema_view(
     generator_class=OpenAPISchemaGenerator,
     authentication_classes=(SessionAuthentication,),
     permission_classes=(permissions.AllowAny,),
+    url=config('SERVER_HOST', default='http://0.0.0.0')
 )
 USER_MODEL = get_user_model()
 urlpatterns = [
