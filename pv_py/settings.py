@@ -23,7 +23,7 @@ CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY', default='test_secret_')
 server_host = config('SERVER_HOST', default='http://0.0.0.0')
-# server_ip = config('SERVER_ID', default='0.0.0.0')
+server_ip = config('SERVER_ID', default='0.0.0.0')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -32,8 +32,9 @@ ALLOWED_HOSTS = (
 )
 CORS_ALLOWED_ORIGINS = [
     server_host,
-    # f'http://{server_ip}:85',
+    f'http://{server_ip}:85',
 ]
+CSRF_TRUSTED_ORIGINS = [server_host]
 # CORS_ALLOWED_ORIGIN_REGEXES = [
 #     r"^https://\w+\.example\.com$",
 # ]
