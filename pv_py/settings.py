@@ -9,10 +9,13 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+import copy
 import datetime
 import os
 from pathlib import Path
 from decouple import config
+from django.core.handlers.wsgi import WSGIRequest
+from rest_framework.request import Request
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -68,6 +71,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'product.middleware.request_log.RequestLogMiddleware',
 ]
 
 ROOT_URLCONF = 'pv_py.urls'
@@ -138,8 +143,12 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 # def add_my_custom_attribute(record):
-#     record.body = record.request.body.read()
+#     record.body = get_request_body(record.request)
 #     return True
+#
+#
+# def get_request_body(request: WSGIRequest):
+#     return request._get_post
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -171,7 +180,7 @@ LOGGING = {
             '()': 'django.utils.log.ServerFormatter',
             'format': '[{server_time}] {message} headers:{request.headers}',
             'style': '{',
-        }
+        },
     },
     'handlers': {
         'console': {
@@ -194,7 +203,7 @@ LOGGING = {
             # 'filters': ['add_my_custom_attribute'],
             'class': 'logging.FileHandler',
             'filename': os.path.join(CORE_DIR, 'var/logs/request.log'),
-            'formatter': 'django.request',
+            'formatter': 'verbose',
         },
     },
     'loggers': {
