@@ -27,8 +27,14 @@ class RequestLogMiddleware:
 
         # Only logging "*/api/*" patterns
         if "/api/" in str(request.get_full_path()):
-            req_body = json.loads(request.body.decode("utf-8")) if request.body else {}
-            log_data["request_body"] = req_body
+            try:
+                if request.body:
+                    request_body = json.loads(request.body.decode("utf-8"))
+                else:
+                    request_body = {}
+            except json.decoder.JSONDecodeError as e:
+                request_body = request.body.decode("utf-8")
+            log_data["request_body"] = request_body
 
         # request passes on to controller
         response = self.get_response(request)
@@ -53,4 +59,3 @@ class RequestLogMiddleware:
         except Exception as e:
             request_logger.exception("Unhandled Exception: " + str(e))
         return exception
-
