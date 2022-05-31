@@ -35,7 +35,10 @@ class RequestLogMiddleware:
 
         # add runtime to our log_data
         if response and response["content-type"] == "application/json":
-            response_body = json.loads(response.content.decode("utf-8"))
+            try:
+                response_body = json.loads(response.content.decode("utf-8"))
+            except json.decoder.JSONDecodeError as e:
+                response_body = response.content.decode("utf-8")
             log_data["response_body"] = response_body
         log_data["run_time"] = time.time() - start_time
 
